@@ -1,0 +1,29 @@
+; One [section] per ETL job.   Run:  sh shell_wrapper.sh <section_name> [run_date]
+; A key in a job section overrides the same key in [global].
+
+[global]
+spark_submit_bin = spark-submit
+hql_base_dir     = /app/etl/hql          ; folder holding the HQL files
+log_dir          = /app/etl/logs
+yarn_queue       = etl
+driver_memory    = 4g
+executor_memory  = 8g
+executor_cores   = 4
+num_executors    = 10
+
+[daily_sales_agg]
+hql_path         = sales/daily_sales_agg.hql
+source_db        = stg
+source_table     = sales_txn
+target_db        = dw
+target_table     = daily_sales
+executor_memory  = 12g
+num_executors    = 20
+
+[customer_dim_load]
+hql_path         = customer/customer_dim_load.hql
+source_db        = stg
+source_table     = customer_stg
+target_db        = dw
+target_table     = customer_dim
+yarn_queue       = etl_low
